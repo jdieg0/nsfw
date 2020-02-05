@@ -12,12 +12,33 @@ We are looking for help with the german translation. You can easily translate te
 Thank you!
 
 
-# Install and run
+# Install
 
 ```bash
 pip install -r requirements.txt
 npm install
 bower install
+```
+
+## macOS
+
+In order to install ```psycopg2``` and ```pylibmc``` via ```pip```, some header files must be installed:
+
+```bash
+brew install libpq libmemcached
+```
+
+Also ```bower``` can be installed via [Homebrew](https://brew.sh/) if missing:
+
+```bash
+brew install bower
+```
+
+# Run
+
+```bash
+# generate database file
+./manage.py migrate
 # collect yesterday reports
 ./manage.py yesterday
 # launch the web application
