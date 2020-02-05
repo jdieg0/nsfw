@@ -2,12 +2,8 @@ from app.nsfw.models import Report
 import requests
 from django.core.management.base import BaseCommand
 import datetime
-
-POLLUTANTS = {
-    'PM1': 'PM10',
-    'NO2': 'NO2',
-}
-
+from urllib.parse import urlencode
+from app.nsfw.management.utils import POLLUTANTS, SCOPES, UBA_BASE_URL
 
 class UmaCommand(BaseCommand):
     def add_arguments(self, parser):
@@ -15,17 +11,17 @@ class UmaCommand(BaseCommand):
 
     def handle(self, *args, **options):
         for date in options['date']:
-            date = list(map(lambda _: int(_), date.split('.')))
-            date = datetime.datetime(date[2], date[1], date[0])
-            date_from = int(date.timestamp())
-            date_to = int((date + datetime.timedelta(days=1)).timestamp())
-            url = """https://www.umweltbundesamt.de/uaq/csv/stations/data?
-station[]=&pollutant[]={pollutant}&scope[]={data_type}&group[]=pollutant&
-range[]={date_from},{date_to}""".replace('\n', '').format(
-                date_from=date_from,
-                date_to=date_to,
-                pollutant=POLLUTANTS[self.pollutant],
-                data_type=self.data_type)
+            date = datetime.datetime.strptime(date, "%d.%m.%Y").strftime("%Y-%m-%d")
+            query = {
+                "component" : POLLUTANTS[self.pollutant],
+                "scope"     : SCOPES[self.data_type],
+                "date_from" : date,
+                "time_from" : 1,
+                "date_to"   : date,
+                "time_to"   : 24,
+            }
+            query_string = urlencode(query)
+            url = UBA_BASE_URL + query_string
             print('url', url)
             req = requests.get(url)
             content = req.content.decode('iso-8859-1')
