@@ -11,7 +11,7 @@ pytz==2016.10
 # PROD
 gunicorn==19.4.5
 dj-database-url==0.4.0
-psycopg2
+psycopg2-binary
 newrelic
 pylibmc==1.5.0
 django-pylibmc==0.6.1

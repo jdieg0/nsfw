@@ -2,6 +2,7 @@
 .tx
 .env
 env/
+venv/
 node_modules/
 static/.webassets-cache
 static/gen
@@ -13,3 +14,6 @@ data/
 staticfiles/
 uploaded/
 app/static/bower_components
+.DS_Store
+package-lock.json
+.vscode/settings.json
